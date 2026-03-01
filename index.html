@@ -705,6 +705,44 @@
       showScreen("loading");
     });
 
+    const categoryOptions = document.getElementById("categoryOptions");
+const categorySubtitle = document.getElementById("categorySubtitle");
+const categoryHint = document.getElementById("categoryHint");
+const backToLoadingFromCategory = document.getElementById("backToLoadingFromCategory");
+
+backToLoadingFromCategory.addEventListener("click", () => {
+  showScreen("loading");
+});
+
+categoryOptions.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-type]");
+  if (!btn) return;
+
+  const type = btn.dataset.type;
+  CONFIG.selectedType = type;
+
+  // Визуально подсветим выбранную кнопку
+  [...categoryOptions.querySelectorAll("[data-type]")].forEach(el => {
+    el.style.borderColor = "rgba(255,255,255,.18)";
+    el.style.background = "rgba(255,255,255,.04)";
+  });
+  btn.style.borderColor = "rgba(255,209,102,.6)";
+  btn.style.background = "rgba(255,209,102,.08)";
+
+  const profile = CONFIG.profiles[type];
+  categoryHint.textContent = `Выбрано: ${profile.label}. ${profile.quizIntro}`;
+  categorySubtitle.textContent = `Отлично. Подготовлю персональную версию для категории: ${profile.label}.`;
+
+  // Небольшая пауза для ощущения "умного интерфейса"
+  setTimeout(() => {
+    currentQuestion = 0;
+    answers = [];
+    showScreen("quiz");
+    applyProfileToUI(); // важно
+    renderQuestion();
+  }, 350);
+});
+
     // Пасхалка: 5 кликов по brand
     let brandTapCount = 0;
     const brandTap = document.getElementById("brandTap");
@@ -800,19 +838,43 @@
       }, speed);
     }
 
+    function getActiveProfile() {
+  return CONFIG.profiles[CONFIG.selectedType] || CONFIG.profiles.friend;
+}
+
+function applyProfileToUI() {
+  const profile = getActiveProfile();
+
+  // Меняем подписи в разных местах сайта
+  const quizTitle = document.querySelector("#screen-quiz .title");
+  const quizSubtitle = document.querySelector("#screen-quiz .subtitle");
+  const finalScreenTitle = document.querySelector("#screen-final .title");
+  const finalScreenSubtitle = document.querySelector("#screen-final .subtitle");
+
+  if (quizTitle) quizTitle.textContent = "Небольшой интерактив 💻🌷";
+  if (quizSubtitle) quizSubtitle.textContent = profile.quizIntro;
+
+  if (finalScreenTitle) finalScreenTitle.textContent = profile.finalTitle;
+  if (finalScreenSubtitle) finalScreenSubtitle.textContent = "Маленький digital-сюрприз завершён. А теперь — самое важное.";
+}
+
     function prepareFinal(){
-      finalName.textContent = `${CONFIG.recipientName} 💖`;
-      giftCustomText.textContent = CONFIG.giftText;
+  const profile = getActiveProfile();
 
-      // Можно слегка персонализировать письмо по ответам
-      const moodHint = answers[0] ? `\n\nP.S. Судя по твоему выбору, сегодня день в настроении: ${answers[0].replace(/✅|✨|💫|☕|😄|😍|🌸|🙌/g,"").trim()}. И это отличный выбор.` : "";
+  finalName.textContent = `${profile.recipientName} 💖`;
+  giftCustomText.textContent = profile.giftText;
 
-      const finalLetter = CONFIG.letter + moodHint;
-      typeText(letterText, finalLetter, 12);
+  // Лёгкая персонализация по ответам из квиза
+  const moodHint = answers[0]
+    ? `\n\nP.S. Судя по выбранному настроению: ${answers[0].replace(/✅|✨|💫|☕|😄|😍|🌸|🙌|💖|💐|🌷/g,"").trim()} — это будет красивый день.`
+    : "";
 
-      giftBox.classList.remove("show");
-      document.getElementById("finalMeta").textContent = `March 8 • handcrafted version • ${new Date().getFullYear()}`;
-    }
+  const finalLetter = profile.letter + moodHint;
+  typeText(letterText, finalLetter, 12);
+
+  giftBox.classList.remove("show");
+  document.getElementById("finalMeta").textContent = `March 8 • handcrafted version • ${new Date().getFullYear()}`;
+}
 
     giftBtn.addEventListener("click", () => {
       giftBox.classList.add("show");
@@ -865,3 +927,4 @@
 </body>
 
 </html>
+
