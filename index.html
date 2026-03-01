@@ -19,18 +19,20 @@
     }
 
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
-    min-height:100%;
+      min-height:100%;
       font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    color:var(--text);
-    background:
-    radial-gradient(1200px 700px at 10% 10%, #2a1d4e 0%, transparent 60%),
-    radial-gradient(1000px 600px at 90% 20%, #3f1d37 0%, transparent 60%),
-    linear-gradient(135deg, var(--bg1), var(--bg2));
-    overflow-x:hidden;
-    overflow-y:auto;
-    -webkit-text-size-adjust:100%;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 10% 10%, #2a1d4e 0%, transparent 60%),
+        radial-gradient(1000px 600px at 90% 20%, #3f1d37 0%, transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+      overflow-y:auto;
+      -webkit-text-size-adjust:100%;
+      scroll-behavior:smooth;
     }
 
     /* Floating particles */
@@ -57,28 +59,35 @@
 
     /* Layout */
     .app{
-  position:relative;
-  z-index:1;
-  min-height:100vh;
-  min-height:100dvh; /* мобильный безопасный viewport */
-  display:grid;
-  place-items:center;
-  padding:20px;
-}
+      position:relative;
+      z-index:1;
+      min-height:100vh;
+      min-height:100dvh;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      padding-left:max(20px, env(safe-area-inset-left));
+      padding-right:max(20px, env(safe-area-inset-right));
+      padding-top:max(20px, env(safe-area-inset-top));
+      padding-bottom:max(20px, env(safe-area-inset-bottom));
+    }
+
     .screen{
-  width:min(860px, 100%);
-  min-height:520px;
-  border:1px solid var(--stroke);
-  background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
-  backdrop-filter: blur(14px);
-  border-radius:24px;
-  box-shadow: var(--shadow);
-  padding:24px;
-  display:none;
-  position:relative;
-  overflow:visible; /* важно для скролла */
-  margin-block: 10px;
-}
+      width:min(860px, 100%);
+      min-height:520px;
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius:24px;
+      box-shadow: var(--shadow);
+      padding:24px;
+      padding-bottom:72px;
+      display:none;
+      position:relative;
+      overflow:visible;
+      margin-block:10px;
+    }
     .screen.active{
       display:block;
       animation: fadeIn .5s ease;
@@ -102,11 +111,14 @@
       gap:10px;
       font-weight:700;
       letter-spacing:.3px;
+      cursor:default;
+      user-select:none;
     }
     .brand-badge{
       width:12px;height:12px;border-radius:999px;
       background:linear-gradient(135deg, var(--accent), #ff8ec1);
       box-shadow:0 0 18px rgba(255,111,174,.7);
+      flex:0 0 auto;
     }
 
     .chip{
@@ -116,6 +128,7 @@
       color:var(--muted);
       font-size:12px;
       background:rgba(255,255,255,.03);
+      white-space:nowrap;
     }
 
     .hero{
@@ -163,9 +176,15 @@
       cursor:pointer;
       transition:.2s ease;
       box-shadow:0 8px 24px rgba(255,183,3,.25);
+      font: inherit;
     }
     button:hover{ transform:translateY(-2px) scale(1.01); }
     button:active{ transform:translateY(0) scale(.995); }
+    button:disabled{
+      opacity:.65;
+      cursor:not-allowed;
+      transform:none !important;
+    }
 
     .btn-secondary{
       color:var(--text);
@@ -278,6 +297,7 @@
       text-align:left;
       transition:.2s ease;
       font-weight:600;
+      box-shadow:none;
     }
     .option:hover{
       transform:translateY(-2px);
@@ -347,15 +367,6 @@
       padding-top:12px;
     }
 
-    .typing{
-      border-right:2px solid rgba(255,255,255,.8);
-      white-space:nowrap;
-      overflow:hidden;
-      display:inline-block;
-      animation: caret 1s steps(1,end) infinite;
-    }
-    @keyframes caret{50%{border-color:transparent}}
-
     .hidden-msg{
       position:absolute;
       top:68px;
@@ -370,6 +381,7 @@
       transform:translateY(-4px);
       pointer-events:none;
       transition:.25s ease;
+      z-index:2;
     }
     .hidden-msg.show{
       opacity:1;
@@ -378,11 +390,101 @@
 
     /* Mobile */
     @media (max-width: 640px){
-      .screen{min-height:560px;padding:18px;border-radius:18px}
-      .footer-note{position:static;margin-top:16px;padding-top:10px}
-      .options{grid-template-columns:1fr}
-      button{width:100%}
-      .btns{flex-direction:column}
+      .app{
+        padding:12px;
+        padding-left:max(12px, env(safe-area-inset-left));
+        padding-right:max(12px, env(safe-area-inset-right));
+        padding-top:max(12px, env(safe-area-inset-top));
+        padding-bottom:max(12px, env(safe-area-inset-bottom));
+        align-items:start;
+      }
+
+      .screen{
+        min-height:auto;
+        padding:16px;
+        padding-bottom:18px;
+        border-radius:18px;
+        margin-block:8px 16px;
+      }
+
+      .header{
+        align-items:flex-start;
+        gap:8px;
+        flex-direction:column;
+      }
+
+      .chip{
+        font-size:11px;
+        padding:6px 10px;
+      }
+
+      .title{
+        font-size: clamp(22px, 7vw, 30px);
+        line-height:1.12;
+      }
+
+      .subtitle{
+        font-size:14px;
+        line-height:1.5;
+      }
+
+      .panel,
+      .question-box,
+      .love-card{
+        padding:14px;
+        border-radius:14px;
+      }
+
+      .terminal{
+        min-height:150px;
+        padding:12px;
+        font-size:12px;
+        line-height:1.45;
+      }
+
+      .status-grid{
+        grid-template-columns:1fr;
+      }
+
+      .options{
+        grid-template-columns:1fr;
+        gap:8px;
+      }
+
+      .option{
+        min-height:48px;
+        font-size:14px;
+        padding:12px;
+      }
+
+      .btns{
+        flex-direction:column;
+        gap:8px;
+      }
+
+      button{
+        width:100%;
+        min-height:48px;
+        border-radius:12px;
+        font-size:14px;
+        padding:12px 14px;
+      }
+
+      .footer-note{
+        position:static;
+        margin-top:14px;
+        padding-top:10px;
+        font-size:11px;
+        flex-direction:column;
+        gap:4px;
+      }
+
+      .hidden-msg{
+        top:56px;
+        right:12px;
+        left:12px;
+        font-size:12px;
+      }
     }
   </style>
 </head>
@@ -444,7 +546,46 @@
 
       <div class="footer-note">
         <span>made with care by Bakbergen</span>
-        <span>Арнайы, жаныма жакын жандар үшін 💐</span>
+        <span>Арнайы, жаныма жақын жандар үшін 💐</span>
+      </div>
+    </section>
+
+    <!-- SCREEN 1.5: CATEGORY SELECT -->
+    <section class="screen" id="screen-category">
+      <div class="header">
+        <div class="brand">
+          <span class="brand-badge"></span>
+          <span>Recipient Detection Module</span>
+        </div>
+        <div class="chip">step: profile select</div>
+      </div>
+
+      <div class="hero">
+        <h1 class="title">Кімге арналған сюрприз? 💐</h1>
+        <p class="subtitle" id="categorySubtitle">
+          Санатты таңда — сайт құттықтау мәтінін, финалдағы сөздерді және сюрприз сипаттамасын соған бейімдейді.
+        </p>
+      </div>
+
+      <div class="question-box">
+        <h2 class="q-title">Вариантты таңда:</h2>
+        <div class="options" id="categoryOptions">
+          <button class="option" data-type="mom">👩 Мама / Ана</button>
+          <button class="option" data-type="sister">👧 Сестра / Әпке</button>
+          <button class="option" data-type="friend">🌸 Подруга / Құрбы</button>
+        </div>
+        <div class="score" id="categoryHint">
+          Бір сайт — үш сценарий ✨
+        </div>
+      </div>
+
+      <div class="btns">
+        <button class="btn-secondary" id="backToLoadingFromCategory">← Артқа</button>
+      </div>
+
+      <div class="footer-note">
+        <span>smart profile mode</span>
+        <span>one project • 3 scenarios</span>
       </div>
     </section>
 
@@ -455,24 +596,24 @@
           <span class="brand-badge"></span>
           <span>Secret Interaction Module</span>
         </div>
-        <div class="chip" id="quizStepChip">Кадам 1 / 3</div>
+        <div class="chip" id="quizStepChip">Қадам 1 / 3</div>
       </div>
 
       <div class="hero">
         <h1 class="title">Кішігірім интерактив 💻🌷</h1>
-        <p class="subtitle">
-          Мен шағын квест жасадым. Қате жауаптар жоқ-тек позитив жинайтын сұрактар.
+        <p class="subtitle" id="quizSubtitleText">
+          Мен шағын квест жасадым. Қате жауаптар жоқ — тек позитив жинайтын сұрақтар.
         </p>
       </div>
 
       <div class="question-box">
-        <h2 class="q-title" id="questionTitle">Сұрак жүктелуде…</h2>
+        <h2 class="q-title" id="questionTitle">Сұрақ жүктелуде…</h2>
         <div class="options" id="options"></div>
         <div class="score" id="scoreText">Жылу жиналуда: 0/3 ✨</div>
       </div>
 
       <div class="btns">
-        <button class="btn-secondary" id="backToLoadBtn">← Артка</button>
+        <button class="btn-secondary" id="backToLoadBtn">← Артқа</button>
       </div>
 
       <div class="footer-note">
@@ -492,9 +633,9 @@
       </div>
 
       <div class="hero">
-        <h1 class="title">8 мартпен құттықтаймын 🌸</h1>
-        <p class="subtitle">
-          Кішкентай сюрпризім аяқталды. Ал енді-ең маңыздысы.
+        <h1 class="title" id="finalScreenTitle">8 наурызбен құттықтаймын 🌸</h1>
+        <p class="subtitle" id="finalScreenSubtitle">
+          Кішкентай сюрпризім аяқталды. Ал енді — ең маңыздысы.
         </p>
       </div>
 
@@ -505,7 +646,7 @@
         </div>
 
         <div class="btns">
-          <button id="giftBtn">Жасырын сыйлыкты ашу 🎁</button>
+          <button id="giftBtn">Жасырын сыйлықты ашу 🎁</button>
           <button class="btn-secondary" id="restartBtn">Тестті қайта өту ↻</button>
         </div>
 
@@ -525,25 +666,64 @@
 
   <script>
     /* =========================
-       🔧 КАСТОМИЗАЦИЯ ПОД ТЕБЯ
-       Измени эти поля и будет совсем персонально
+       CONFIG (персонализация)
     ========================== */
     const CONFIG = {
-      recipientName: "Сен үшін", // Например: "Для Айгерим"
-      // Основной текст поздравления (можно писать от себя)
-      letter: `С 8 Марта 🌷
+      selectedType: null, // "mom" | "sister" | "friend"
+      profiles: {
+        mom: {
+          label: "Мама / Ана",
+          recipientName: "Анашым үшін",
+          finalTitle: "8 наурызбен, Анашым 🌸",
+          finalSubtitle: "Кішкентай digital-сюрприз дайын. Енді ең жүректегі сөздер 💖",
+          quizIntro: "Ең жақын жанға арналған құттықтау — тек шын көңілден және қолмен жиналған 💐",
+          letter: `8 наурыз мерекеңізбен, Анашым 💖
 
-Я хотел сделать не просто обычное поздравление, а что-то своё — маленький проект, который выглядит как код, но по смыслу про внимание и тепло.
+Сізге жай ғана құттықтау жазғым келмеді. Сондықтан өз қолыммен кішкентай жоба жасап, осы сайтты дайындадым.
 
-Пусть в твоей жизни будет больше спокойствия, радости, красивых моментов и людей, рядом с которыми легко.
-Пусть мечты не откладываются “на потом”, а постепенно становятся реальностью.
+Маған берген мейіріміңіз, сабырыңыз, қамқорлығыңыз және қолдауыңыз үшін рақмет.
+Сіз әрқашан тірегімсіз.
 
-Спасибо за твою энергию, доброту и свет.
-Сегодня — твой день, и он должен быть красивым. ✨`,
-      // Что показать в блоке "секретный подарок"
-      giftText: "Бонус: кофе ☕ + прогулка 🚶 + вкусняшка 🍰 + хорошее настроение весь день",
-      // Если хочешь вставить реальный подарок текстом:
-      // giftText: "Подарок: сертификат + цветы + ужин 💐"
+Сізге зор денсаулық, жан тыныштығы, қуаныш, береке және көп бақыт тілеймін.
+Жүзіңізден күлкі кетпесін, көңіліңіз әрдайым жайдары болсын ✨`,
+          giftText: "Бонус: гүл 💐 + шай/кофе ☕ + тәтті 🍰 + бүгінгі күнде демалыс режимі 🌷"
+        },
+
+        sister: {
+          label: "Сестра / Әпке",
+          recipientName: "Әпкеме / Сіңліме",
+          finalTitle: "8 наурызбен, жаным 🌷",
+          finalSubtitle: "Кішкентай digital-сюрприз аяқталды. Енді бастысы — жылы тілек ✨",
+          quizIntro: "Ең стильді әрі мықты қызға арналған режим қосылды 😎",
+          letter: `8 наурызбен құттықтаймын 🌷
+
+Саған кәдімгі құттықтау емес, өзімше бірдеңе жасағым келді. Сол үшін мына кішкентай сайт-сюрпризді жинап шықтым 😄
+
+Саған қуаныш, әдемі сәттер, шабыт, сәттілік және өзіңе деген сенімділік тілеймін.
+Жоспарларың орындалып, әр күнің жақсы жаңалықтарға толы болсын.
+
+Әрдайым жарқын, мықты, ерекше болып жүр ✨`,
+          giftText: "Бонус: тәтті 🍫 + кофе/серуен ☕🚶 + көңіл-күй MAX 😄"
+        },
+
+        friend: {
+          label: "Жаным сол",
+          recipientName: "Сен үшін",
+          finalTitle: "8 наурызбен құттықтаймын 🌸",
+          finalSubtitle: "Кішкентай digital-сюрприз аяқталды. Ал енді — ең маңыздысы 💐",
+          quizIntro: "Достық құттықтау режимі іске қосылды: милота деңгейі көтерілді 💖",
+          letter: `8 наурызбен 💐
+
+Саған арнап әдеттегі құттықтаудан бөлек, кішкентай әрі ерекше бір нәрсе жасағым келді. Сондықтан осы мини-сайтты өз қолыммен дайындадым.
+
+Саған көп қуаныш, шабыт, жылы эмоциялар, әдемі күндер және жағымды тосынсыйлар тілеймін.
+Жаныңда әрдайым жақсы адамдар болып, көңілің тыныш болсын.
+
+Сенің энергияң мен позитивің үшін рақмет ✨
+Бүгінгі күнің ерекше әдемі өтсін.`,
+          giftText: "Бонус: кофе ☕ + серуен 🌆 + тәтті 🍰 + мерекелік вайб ✨"
+        }
+      }
     };
 
     /* =========================
@@ -551,21 +731,40 @@
     ========================== */
     const screens = {
       loading: document.getElementById("screen-loading"),
+      category: document.getElementById("screen-category"),
       quiz: document.getElementById("screen-quiz"),
       final: document.getElementById("screen-final"),
     };
 
     function showScreen(name){
-      Object.values(screens).forEach(s => s.classList.remove("active"));
-      screens[name].classList.add("active");
+      Object.values(screens).forEach(s => {
+        if (s) s.classList.remove("active");
+      });
+
+      if (screens[name]) {
+        screens[name].classList.add("active");
+      } else {
+        console.warn(`Экран "${name}" не найден. Открываю quiz.`);
+        screens.quiz?.classList.add("active");
+      }
+
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    function getActiveProfile() {
+      return CONFIG.profiles[CONFIG.selectedType] || CONFIG.profiles.friend;
     }
 
     /* =========================
-       Floating particles (flowers/hearts/stars)
+       Floating particles
     ========================== */
     const particlesEl = document.getElementById("particles");
     const particleSymbols = ["🌸","✨","💮","💖","🌷"];
+
     function createParticle(){
+      if (!particlesEl) return;
       const p = document.createElement("div");
       p.className = "particle";
       p.textContent = particleSymbols[Math.floor(Math.random()*particleSymbols.length)];
@@ -617,14 +816,14 @@
     let loadTimer = null;
 
     function updateStatuses(p){
-      s1.textContent = p >= 35 ? "online ✅" : "starting…";
-      s2.textContent = p >= 68 ? "compiled ✅" : "waiting…";
-      s3.textContent = p >= 92 ? "connected ✅" : "auth…";
+      if (s1) s1.textContent = p >= 35 ? "online ✅" : "starting…";
+      if (s2) s2.textContent = p >= 68 ? "compiled ✅" : "waiting…";
+      if (s3) s3.textContent = p >= 92 ? "connected ✅" : "auth…";
     }
 
     function typeTerminal(lines, speed=26){
+      if (!termText) return;
       let full = "";
-      let i = 0;
       let lineIndex = 0;
 
       function typeNext(){
@@ -654,104 +853,139 @@
       typeTerminal(terminalLines);
 
       loadTimer = setInterval(() => {
-        loadPercent += Math.floor(Math.random()*6) + 2; // +2..7
+        loadPercent += Math.floor(Math.random()*6) + 2;
         if(loadPercent > 100) loadPercent = 100;
 
-        progressBar.style.width = loadPercent + "%";
+        if (progressBar) progressBar.style.width = loadPercent + "%";
         updateStatuses(loadPercent);
 
         const msgIndex = Math.min(
           Math.floor((loadPercent / 100) * (loadingMessages.length - 1)),
           loadingMessages.length - 1
         );
-        progressLabel.textContent = loadingMessages[msgIndex];
+        if (progressLabel) progressLabel.textContent = loadingMessages[msgIndex];
 
         if(loadPercent >= 100){
           clearInterval(loadTimer);
           loadingDone = true;
-          startBtn.disabled = false;
-          startBtn.textContent = "Запустить сюрприз 🚀";
-          progressLabel.textContent = "Готово! Всё собрано без багов (почти 😄)";
-          s1.textContent = "online ✅";
-          s2.textContent = "compiled ✅";
-          s3.textContent = "connected ✅";
+          if (startBtn) {
+            startBtn.disabled = false;
+            startBtn.textContent = "Тосын сыйды косу 🚀";
+          }
+          if (progressLabel) progressLabel.textContent = "Готово!😄";
+          if (s1) s1.textContent = "online ✅";
+          if (s2) s2.textContent = "compiled ✅";
+          if (s3) s3.textContent = "connected ✅";
         }
       }, 320);
     }
 
-    skipLoadBtn.addEventListener("click", () => {
+    skipLoadBtn?.addEventListener("click", () => {
       loadPercent = 100;
       loadingDone = true;
       if(loadTimer) clearInterval(loadTimer);
-      progressBar.style.width = "100%";
+
+      if (progressBar) progressBar.style.width = "100%";
       updateStatuses(100);
-      progressLabel.textContent = "Загрузка пропущена. Готово к запуску ✅";
-      s1.textContent = "online ✅";
-      s2.textContent = "compiled ✅";
-      s3.textContent = "connected ✅";
-      startBtn.disabled = false;
-      if (!termText.innerHTML.trim()) {
+      if (progressLabel) progressLabel.textContent = "Загрузка пропущена. Готово к запуску ✅";
+
+      if (s1) s1.textContent = "online ✅";
+      if (s2) s2.textContent = "compiled ✅";
+      if (s3) s3.textContent = "connected ✅";
+
+      if (startBtn) startBtn.disabled = false;
+
+      if (termText && !termText.innerHTML.trim()) {
         termText.innerHTML = terminalLines.join("<br>") + '<br><span class="cursor"></span>';
       }
     });
 
-    startBtn.addEventListener("click", () => {
+    startBtn?.addEventListener("click", () => {
       if(!loadingDone) return;
-      showScreen("quiz");
-      renderQuestion();
+      showScreen("category");
     });
 
-    document.getElementById("backToLoadBtn").addEventListener("click", () => {
+    document.getElementById("backToLoadBtn")?.addEventListener("click", () => {
       showScreen("loading");
     });
 
+    /* =========================
+       Category screen logic
+    ========================== */
     const categoryOptions = document.getElementById("categoryOptions");
-const categorySubtitle = document.getElementById("categorySubtitle");
-const categoryHint = document.getElementById("categoryHint");
-const backToLoadingFromCategory = document.getElementById("backToLoadingFromCategory");
+    const categorySubtitle = document.getElementById("categorySubtitle");
+    const categoryHint = document.getElementById("categoryHint");
+    const backToLoadingFromCategory = document.getElementById("backToLoadingFromCategory");
 
-backToLoadingFromCategory.addEventListener("click", () => {
-  showScreen("loading");
-});
+    backToLoadingFromCategory?.addEventListener("click", () => {
+      showScreen("loading");
+    });
 
-categoryOptions.addEventListener("click", (e) => {
-  const btn = e.target.closest("[data-type]");
-  if (!btn) return;
+    function applyProfileToUI() {
+      const profile = getActiveProfile();
 
-  const type = btn.dataset.type;
-  CONFIG.selectedType = type;
+      const quizTitle = document.querySelector("#screen-quiz .title");
+      const quizSubtitle = document.getElementById("quizSubtitleText");
+      const finalScreenTitle = document.getElementById("finalScreenTitle");
+      const finalScreenSubtitle = document.getElementById("finalScreenSubtitle");
 
-  // Визуально подсветим выбранную кнопку
-  [...categoryOptions.querySelectorAll("[data-type]")].forEach(el => {
-    el.style.borderColor = "rgba(255,255,255,.18)";
-    el.style.background = "rgba(255,255,255,.04)";
-  });
-  btn.style.borderColor = "rgba(255,209,102,.6)";
-  btn.style.background = "rgba(255,209,102,.08)";
+      if (quizTitle) quizTitle.textContent = "Кішігірім интерактив 💻🌷";
+      if (quizSubtitle) quizSubtitle.textContent = profile.quizIntro;
 
-  const profile = CONFIG.profiles[type];
-  categoryHint.textContent = `Выбрано: ${profile.label}. ${profile.quizIntro}`;
-  categorySubtitle.textContent = `Отлично. Подготовлю персональную версию для категории: ${profile.label}.`;
+      if (finalScreenTitle) finalScreenTitle.textContent = profile.finalTitle;
+      if (finalScreenSubtitle) finalScreenSubtitle.textContent = profile.finalSubtitle;
+    }
 
-  // Небольшая пауза для ощущения "умного интерфейса"
-  setTimeout(() => {
-    currentQuestion = 0;
-    answers = [];
-    showScreen("quiz");
-    applyProfileToUI(); // важно
-    renderQuestion();
-  }, 350);
-});
+    categoryOptions?.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-type]");
+      if (!btn) return;
 
-    // Пасхалка: 5 кликов по brand
+      const type = btn.dataset.type;
+      if (!CONFIG.profiles[type]) {
+        console.warn("Неизвестный тип профиля:", type);
+        return;
+      }
+
+      CONFIG.selectedType = type;
+
+      [...categoryOptions.querySelectorAll("[data-type]")].forEach(el => {
+        el.style.borderColor = "rgba(255,255,255,.18)";
+        el.style.background = "rgba(255,255,255,.04)";
+      });
+
+      btn.style.borderColor = "rgba(255,209,102,.6)";
+      btn.style.background = "rgba(255,209,102,.08)";
+
+      const profile = CONFIG.profiles[type];
+
+      if (categoryHint) {
+        categoryHint.textContent = `Таңдалды: ${profile.label}. ${profile.quizIntro}`;
+      }
+      if (categorySubtitle) {
+        categorySubtitle.textContent = `Жақсы. ${profile.label} үшін жеке нұсқаны дайындап жатырмын...`;
+      }
+
+      setTimeout(() => {
+        currentQuestion = 0;
+        answers = [];
+        applyProfileToUI();
+        showScreen("quiz");
+        renderQuestion();
+      }, 320);
+    });
+
+    /* =========================
+       Easter egg
+    ========================== */
     let brandTapCount = 0;
     const brandTap = document.getElementById("brandTap");
     const hiddenMsg = document.getElementById("hiddenMsg");
-    brandTap.addEventListener("click", () => {
+
+    brandTap?.addEventListener("click", () => {
       brandTapCount++;
       if(brandTapCount >= 5){
-        hiddenMsg.classList.add("show");
-        setTimeout(() => hiddenMsg.classList.remove("show"), 2000);
+        hiddenMsg?.classList.add("show");
+        setTimeout(() => hiddenMsg?.classList.remove("show"), 2000);
         brandTapCount = 0;
       }
     });
@@ -761,16 +995,16 @@ categoryOptions.addEventListener("click", (e) => {
     ========================== */
     const questions = [
       {
-        q: "Выбери настроение этого дня 🌷",
-        options: ["Спокойное и уютное ☕", "Яркое и праздничное ✨", "Смешное и лёгкое 😄", "Немного всего сразу 💫"]
+        q: "Бүгінгі күннің көңіл күйін таңда 🌷",
+        options: ["Жайлы әрі тыныш ☕", "Жарқын әрі мерекелік ✨", "Көңілді әрі жеңіл 😄", "Бәрінен аздап 💫"]
       },
       {
-        q: "Что приятнее в сюрпризе? 🎁",
-        options: ["Внимание и забота 💖", "Неожиданность 😍", "Красивое оформление 🌸", "Когда всё вместе 🙌"]
+        q: "Сюрпризде саған не көбірек ұнайды? 🎁",
+        options: ["Көңіл бөлу мен қамқорлық 💖", "Күтпеген сәт 😍", "Әдемі безендіру 🌸", "Барлығы бірге 🙌"]
       },
       {
-        q: "Какой финал ты выбираешь? 💐",
-        options: ["Тёплые слова", "Мини-подарок", "Прогулка/кофе", "Все варианты approved ✅"]
+        q: "Қай финалды таңдайсың? 💐",
+        options: ["Жылы сөздер", "Мини-сыйлық", "Серуен/кофе", "Барлығы ✅"]
       }
     ];
 
@@ -784,29 +1018,56 @@ categoryOptions.addEventListener("click", (e) => {
     const progressHuman = document.getElementById("progressHuman");
 
     function renderQuestion(){
-      const item = questions[currentQuestion];
-      quizStepChip.textContent = `Шаг ${currentQuestion + 1} / ${questions.length}`;
-      progressHuman.textContent = `готовность: ${Math.round(((currentQuestion+1)/questions.length)*100)}%`;
+      try {
+        if (!Array.isArray(questions) || questions.length === 0) {
+          if (questionTitle) questionTitle.textContent = "Сұрақтар табылмады ❌";
+          if (optionsEl) optionsEl.innerHTML = "";
+          if (scoreText) scoreText.textContent = "Қате: сұрақтар массиві бос.";
+          console.error("questions массиві бос немесе анықталмаған");
+          return;
+        }
 
-      questionTitle.textContent = item.q;
-      optionsEl.innerHTML = "";
+        if (currentQuestion < 0 || currentQuestion >= questions.length) {
+          currentQuestion = 0;
+        }
 
-      item.options.forEach(opt => {
-        const btn = document.createElement("button");
-        btn.className = "option";
-        btn.textContent = opt;
-        btn.onclick = () => selectAnswer(opt);
-        optionsEl.appendChild(btn);
-      });
+        const item = questions[currentQuestion];
+        if (!item || !item.q || !Array.isArray(item.options)) {
+          if (questionTitle) questionTitle.textContent = "Сұрақ жүктелмеді ❌";
+          if (optionsEl) optionsEl.innerHTML = "";
+          if (scoreText) scoreText.textContent = "Қате: сұрақ құрылымы дұрыс емес.";
+          console.error("Қате сұрақ:", item);
+          return;
+        }
 
-      scoreText.textContent = `Собрано тепла: ${answers.length}/${questions.length} ✨`;
+        if (quizStepChip) quizStepChip.textContent = `Қадам ${currentQuestion + 1} / ${questions.length}`;
+        if (progressHuman) progressHuman.textContent = `дайын: ${Math.round(((currentQuestion+1)/questions.length)*100)}%`;
+
+        if (questionTitle) questionTitle.textContent = item.q;
+        if (optionsEl) optionsEl.innerHTML = "";
+
+        item.options.forEach(opt => {
+          const btn = document.createElement("button");
+          btn.className = "option";
+          btn.textContent = opt;
+          btn.type = "button";
+          btn.onclick = () => selectAnswer(opt);
+          optionsEl?.appendChild(btn);
+        });
+
+        if (scoreText) scoreText.textContent = `Жылу жиналуда: ${answers.filter(Boolean).length}/${questions.length} ✨`;
+      } catch (err) {
+        console.error("renderQuestion error:", err);
+        if (questionTitle) questionTitle.textContent = "Қате пайда болды ❌";
+        if (optionsEl) optionsEl.innerHTML = "";
+        if (scoreText) scoreText.textContent = "F12 → Console тексер.";
+      }
     }
 
     function selectAnswer(answer){
       answers[currentQuestion] = answer;
-      scoreText.textContent = `Собрано тепла: ${answers.filter(Boolean).length}/${questions.length} ✨`;
+      if (scoreText) scoreText.textContent = `Жылу жиналуда: ${answers.filter(Boolean).length}/${questions.length} ✨`;
 
-      // Небольшая задержка для ощущения интерфейса
       setTimeout(() => {
         currentQuestion++;
         if(currentQuestion < questions.length){
@@ -829,6 +1090,7 @@ categoryOptions.addEventListener("click", (e) => {
     const restartBtn = document.getElementById("restartBtn");
 
     function typeText(element, text, speed=18){
+      if (!element) return;
       element.textContent = "";
       let i = 0;
       const timer = setInterval(() => {
@@ -838,55 +1100,36 @@ categoryOptions.addEventListener("click", (e) => {
       }, speed);
     }
 
-    function getActiveProfile() {
-  return CONFIG.profiles[CONFIG.selectedType] || CONFIG.profiles.friend;
-}
-
-function applyProfileToUI() {
-  const profile = getActiveProfile();
-
-  // Меняем подписи в разных местах сайта
-  const quizTitle = document.querySelector("#screen-quiz .title");
-  const quizSubtitle = document.querySelector("#screen-quiz .subtitle");
-  const finalScreenTitle = document.querySelector("#screen-final .title");
-  const finalScreenSubtitle = document.querySelector("#screen-final .subtitle");
-
-  if (quizTitle) quizTitle.textContent = "Небольшой интерактив 💻🌷";
-  if (quizSubtitle) quizSubtitle.textContent = profile.quizIntro;
-
-  if (finalScreenTitle) finalScreenTitle.textContent = profile.finalTitle;
-  if (finalScreenSubtitle) finalScreenSubtitle.textContent = "Маленький digital-сюрприз завершён. А теперь — самое важное.";
-}
-
     function prepareFinal(){
-  const profile = getActiveProfile();
+      const profile = getActiveProfile();
 
-  finalName.textContent = `${profile.recipientName} 💖`;
-  giftCustomText.textContent = profile.giftText;
+      if (finalName) finalName.textContent = `${profile.recipientName} 💖`;
+      if (giftCustomText) giftCustomText.textContent = profile.giftText;
 
-  // Лёгкая персонализация по ответам из квиза
-  const moodHint = answers[0]
-    ? `\n\nP.S. Судя по выбранному настроению: ${answers[0].replace(/✅|✨|💫|☕|😄|😍|🌸|🙌|💖|💐|🌷/g,"").trim()} — это будет красивый день.`
-    : "";
+      const moodHint = answers[0]
+        ? `\n\nP.S. Таңдалған көңіл күй бойынша: ${answers[0].replace(/✅|✨|💫|☕|😄|😍|🌸|🙌|💖|💐|🌷/g,"").trim()} — бүгін өте әдемі күн болады ✨`
+        : "";
 
-  const finalLetter = profile.letter + moodHint;
-  typeText(letterText, finalLetter, 12);
+      const finalLetter = profile.letter + moodHint;
+      typeText(letterText, finalLetter, 12);
 
-  giftBox.classList.remove("show");
-  document.getElementById("finalMeta").textContent = `March 8 • handcrafted version • ${new Date().getFullYear()}`;
-}
+      giftBox?.classList.remove("show");
+      const finalMeta = document.getElementById("finalMeta");
+      if (finalMeta) {
+        finalMeta.textContent = `March 8 • handcrafted version • ${new Date().getFullYear()}`;
+      }
+    }
 
-    giftBtn.addEventListener("click", () => {
-      giftBox.classList.add("show");
+    giftBtn?.addEventListener("click", () => {
+      giftBox?.classList.add("show");
       burstConfetti();
     });
 
-    restartBtn.addEventListener("click", () => {
+    restartBtn?.addEventListener("click", () => {
       currentQuestion = 0;
       answers = [];
-      giftBox.classList.remove("show");
-      showScreen("quiz");
-      renderQuestion();
+      giftBox?.classList.remove("show");
+      showScreen("category");
     });
 
     /* =========================
@@ -903,9 +1146,11 @@ function applyProfileToUI() {
         el.style.fontSize = (16 + Math.random()*12) + "px";
         el.style.zIndex = 99;
         el.style.pointerEvents = "none";
+
         const dx = (Math.random() - 0.5) * 380;
         const dy = (Math.random() - 0.7) * 280;
         const rot = (Math.random() * 360 - 180);
+
         el.animate([
           { transform: "translate(0,0) scale(1) rotate(0deg)", opacity: 1 },
           { transform: `translate(${dx}px, ${dy}px) scale(.7) rotate(${rot}deg)`, opacity: 0 }
@@ -913,6 +1158,7 @@ function applyProfileToUI() {
           duration: 900 + Math.random()*600,
           easing: "cubic-bezier(.2,.8,.2,1)"
         });
+
         document.body.appendChild(el);
         setTimeout(() => el.remove(), 1600);
       }
@@ -921,10 +1167,11 @@ function applyProfileToUI() {
     /* =========================
        Init
     ========================== */
-    document.getElementById("finalName").textContent = `${CONFIG.recipientName} 💖`;
+    // Фоллбэк профиль по умолчанию (если пользователь еще не выбрал)
+    CONFIG.selectedType = "friend";
+    finalName.textContent = `${getActiveProfile().recipientName} 💖`;
+
     runLoading();
   </script>
 </body>
-
 </html>
-
